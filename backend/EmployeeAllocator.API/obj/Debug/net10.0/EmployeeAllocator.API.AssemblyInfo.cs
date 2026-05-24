@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EmployeeAllocator.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9f4847f4e783520a24ec9ff3847a06344fb2043e")]
 [assembly: System.Reflection.AssemblyProductAttribute("EmployeeAllocator.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EmployeeAllocator.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
