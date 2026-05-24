@@ -6,7 +6,6 @@ using Microsoft.OpenApi.Models;
 using EmployeeAllocator.API.Data;
 using EmployeeAllocator.API.Services;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Database
@@ -27,9 +26,10 @@ else
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-
 // JWT Auth
-var jwtKey = builder.Configuration["Jwt:Key"]!;
+var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY")
+    ?? builder.Configuration["Jwt:Key"]!;
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -39,8 +39,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "EmployeeAllocatorAPI",
+            ValidAudience = builder.Configuration["Jwt:Audience"] ?? "EmployeeAllocatorClient",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
     });
@@ -49,13 +49,15 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 
 // CORS
+var allowedOrigins = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS")
+    ?? builder.Configuration["AllowedOrigins"]
+    ?? "http://localhost:5173";
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(
-                builder.Configuration["AllowedOrigins"] ?? "http://localhost:5173"
-            )
+        policy.WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
