@@ -24,6 +24,10 @@ else
     connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 }
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+
 // JWT Auth
 var jwtKey = builder.Configuration["Jwt:Key"]!;
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
